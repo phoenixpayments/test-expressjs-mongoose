@@ -376,6 +376,13 @@ express-mongoose-ra-json-server@^0.2.2:
   dependencies:
     escape-string-regexp "^4.0.0"
 
+express-oauth2-jwt-bearer@^1.6.0:
+  version "1.6.0"
+  resolved "https://registry.npmjs.org/express-oauth2-jwt-bearer/-/express-oauth2-jwt-bearer-1.6.0.tgz"
+  integrity sha512-HXnez7vocYlOqlfF3ozPcf/WE3zxT7zfUNfeg5FHJnvNwhBYlNXiPOvuCtBalis8xcigvwtInzEKhBuH87+9ug==
+  dependencies:
+    jose "^4.13.1"
+
 express@^4.18.2:
   version "4.18.2"
   resolved "https://registry.npmjs.org/express/-/express-4.18.2.tgz"
@@ -553,6 +560,11 @@ is-number@^7.0.0:
   version "7.0.0"
   resolved "https://registry.npmjs.org/is-number/-/is-number-7.0.0.tgz"
   integrity sha512-41Cifkg6e8TylSpdtTpeLVMqvSBEVzTttHvERD741+pnZ8ANv0004MRL43QKPDlK9cGvNp6NZWZUBlbGXYxxng==
+
+jose@^4.13.1:
+  version "4.15.4"
+  resolved "https://registry.npmjs.org/jose/-/jose-4.15.4.tgz"
+  integrity sha512-W+oqK4H+r5sITxfxpSU+MMdr/YSWGvgZMQDIsNoBDGGy4i7GBPTtvFKibQzW06n3U3TqHjhvBJsirShsEJ6eeQ==
 
 kareem@2.5.1:
   version "2.5.1"
