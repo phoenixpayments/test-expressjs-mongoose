@@ -7,7 +7,7 @@ import apiRoutes from './routes/api';
 const { auth } = require('express-oauth2-jwt-bearer');
 
 const checkJwt = auth({
-  audience: 'https://dev-favico.eu.auth0.com/api/v2/',
+  audience: 'https://expressjs-mongoose-production-3422.up.railway.app/',
   issuerBaseURL: `https://dev-favico.eu.auth0.com/`,
 });
 
