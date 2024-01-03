@@ -1,9 +1,6 @@
 import { Router } from 'express';
-import raExpressMongoose from 'express-mongoose-ra-json-server';
-
-import { CountryModel, ICountry } from "../models/country";
 import { VoucherModel, IVoucher } from "../models/voucher";
-
+import { v4 as uuidv4 } from 'uuid';
 
 const router = Router();
 
@@ -25,7 +22,7 @@ router.post("/create", async (req, res) => {
 
     }
 
-    const voucher: IVoucher = await VoucherModel.create({merchant: merchant, id: crypto.randomUUID().substring(0, 8), date: new Date().toISOString(), amount: req.body.amount, state: "Created"});
+    const voucher: IVoucher = await VoucherModel.create({merchant: merchant, id: uuidv4().substring(0, 8), date: new Date().toISOString(), amount: req.body.amount, state: "Created"});
 
     console.log(`with voucher: ${voucher}`);
     
