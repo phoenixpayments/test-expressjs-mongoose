@@ -2,6 +2,7 @@ import "./lib/db";
 import express from "express";
 import countryRoutes from "./routes/country";
 import morgan = require('morgan');
+import dashboardRoutes from './routes/dashboard';
 import apiRoutes from './routes/api';
 const { auth } = require('express-oauth2-jwt-bearer');
 
@@ -34,7 +35,8 @@ app.get("/guest/", async (req, res) => {
   res.json({ message: "Please visit /countries to view all the countries" });
 });
 
-app.use('/api', checkJwt, apiRoutes);
+app.use('/dashboard', checkJwt, dashboardRoutes);
+app.use('/api', apiRoutes);
 
 app.use("/countries", countryRoutes);
 

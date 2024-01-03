@@ -6,6 +6,9 @@ interface IVoucher extends Document {
   amount: number;
   state: string;
   date: string;
+  transaction: string;
+  cardnumber: string;
+  updatedate: string;
 }
 
 const VoucherSchema = new Schema({
@@ -25,6 +28,15 @@ const VoucherSchema = new Schema({
   date: {
     type: String,
   },    
+  transaction: {
+    type: String,
+  },    
+  cardnumber: {
+    type: String,
+  },    
+  updatedate: {
+    type: String
+  }  
 });
 
 const VoucherModel = model<IVoucher>("Voucher", VoucherSchema);

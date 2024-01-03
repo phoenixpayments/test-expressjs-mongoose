@@ -6,36 +6,79 @@ import { VoucherModel, IVoucher } from "../models/voucher";
 
 
 const router = Router();
-router.use(
-  '/country',
-  raExpressMongoose(CountryModel, {
-    q: ['name', "iso2code"],
-    allowedRegexFields: ['name'],
-    useLean: false,
-  })
-);
-// router.use(
-//   '/voucher',
-//   raExpressMongoose(VoucherModel, {
-//     q: ['id', "merchant_eq=AA", "amount", "state", "date"],
-//     allowedRegexFields: ['merchant'],
-//     useLean: false,
-//   })
-// );
 
-router.get("/voucher", async (req, res) => {
+
+router.post("/create", async (req, res) => {
   try {
 
-    const auth = (req as any).auth;
-    console.debug(`SUB: ${auth.payload.sub.replace("auth0|", "")}`);
-    const sub = auth.payload.sub.replace("auth0|", "");
+    const merchant = req.headers["x-api-key"]
 
-    const vouchers: IVoucher[] = await VoucherModel.find({merchant: sub}).exec();
-    console.debug('vouchers: ', vouchers);
+    if(merchant == undefined || merchant == ""){
+      return res.status(500).json({ error: "Missing authorization" });
+    }
+
+    console.log(`with merchant: ${merchant}`);
+    console.log(`with data:`, req.body);
+
+    if(req.body.amount == undefined || req.body.amount == 0){
+      return res.status(500).json({ error: "Invalid amount" });
+
+    }
+
+    const voucher: IVoucher = await VoucherModel.create({merchant: merchant, id: crypto.randomUUID().substring(0, 8), date: new Date().toISOString(), amount: req.body.amount, state: "Created"});
+
+    console.log(`with voucher: ${voucher}`);
     
-    res.set('X-Total-Count', `${vouchers.length}`);
+    return res.json({state: voucher.state, id: voucher.id, date: voucher.date, amount: voucher.amount});
+  } catch (error) {
+    console.error(error);
+    return res.status(500).json({ error: "Sorry, something went wrong :/" });
+  }
+});
 
-    return res.json(vouchers);
+router.post("/update", async (req, res) => {
+  try {
+
+    const merchant = req.headers["x-api-key"]
+
+    if(merchant == undefined || merchant == ""){
+      return res.status(500).json({ error: "Missing authorization" });
+    }
+
+    console.log(`with merchant: ${merchant}`);
+    console.log(`with data:`, req.body);
+
+    if(req.body.id == undefined || req.body.id == ""){
+      return res.status(500).json({ error: "Missing voucher ID" });
+
+    }
+
+    const voucher: IVoucher | null = await VoucherModel.findOne({id: req.body.id})
+
+    if(voucher){
+
+      if(req.body.state == undefined || req.body.state == ""){
+        return res.status(500).json({ error: "Missing new state" });
+      }
+
+      if(req.body.transaction == undefined || req.body.transaction == ""){
+        return res.status(500).json({ error: "Missing transaction ID" });
+      }
+
+      if(req.body.cardnumber == undefined || req.body.cardnumber == ""){
+        return res.status(500).json({ error: "Missing card number" });
+      }
+
+      const status: IVoucher = await voucher.updateOne({state: req.body.state, transaction: req.body.transaction, cardnumber: req.body.cardnumber, updateDate: new Date().toISOString()})
+
+      const updateVoucher: IVoucher | null = await VoucherModel.findOne({id: req.body.id})
+
+      return res.json(updateVoucher);
+
+
+    }else{
+      return res.status(500).json({ error: "Invalid voucher ID" });
+    }
   } catch (error) {
     console.error(error);
     return res.status(500).json({ error: "Sorry, something went wrong :/" });
