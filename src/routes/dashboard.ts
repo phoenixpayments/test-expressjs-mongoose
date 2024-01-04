@@ -43,8 +43,17 @@ router.get("/voucher", async (req, res) => {
     let totalDocuments = 0;
     if (permissions.includes('role:administrator')) {
       console.log('is administrator');
-      vouchers = await VoucherModel.find().sort(sortObj).skip(start).limit(end - start).exec();
-      totalDocuments = await VoucherModel.countDocuments();
+
+      //check merchant filter
+      if(req.query.merchant != undefined && req.query.merchant != ""){
+        console.log('with merchant filter');
+        vouchers = await VoucherModel.find({merchant: req.query.merchant}).sort(sortObj).skip(start).limit(end - start).exec();
+        totalDocuments = await VoucherModel.countDocuments({merchant: req.query.merchant});
+      }else{
+        console.log('without merchant filter');
+        vouchers = await VoucherModel.find().sort(sortObj).skip(start).limit(end - start).exec();
+        totalDocuments = await VoucherModel.countDocuments();
+      }
     } else {
       vouchers = await VoucherModel.find({ merchant: sub }, {}).sort(sortObj).skip(start).limit(end - start).exec();
       totalDocuments = await VoucherModel.countDocuments({ merchant: sub });
